@@ -19,13 +19,13 @@ export default function PokeballTabBar({ state, descriptors, navigation }) {
                         toValue: 1.15,
                         duration: 400,
                         easing: Easing.ease,
-                        useNativeDriver: false,
+                        useNativeDriver: true,
                     }),
                     Animated.timing(scale, {
                         toValue: 1,
                         duration: 400,
                         easing: Easing.ease,
-                        useNativeDriver: false,
+                        useNativeDriver: true,
                     }),
                 ]),
                 { iterations: -1 }
@@ -34,7 +34,7 @@ export default function PokeballTabBar({ state, descriptors, navigation }) {
             Animated.timing(scale, {
                 toValue: 1,
                 duration: 300,
-                useNativeDriver: false,
+                useNativeDriver: true,
             }).start();
         }
     }, [isLoading]);

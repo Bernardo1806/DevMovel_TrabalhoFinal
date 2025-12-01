@@ -14,7 +14,7 @@ export default function RootLayout() {
                         lib: Ionicons,
                         name: 'list'
                     },
-                    tabLoading: false,
+                    tabLoading: true,
                 }}
             />
             <Tabs.Screen
@@ -26,7 +26,7 @@ export default function RootLayout() {
                         lib: MaterialCommunityIcons,
                         name: 'bag-personal'
                     },
-                    tabLoading: false,
+                    tabLoading: true,
                 }}
             />
         </Tabs>
