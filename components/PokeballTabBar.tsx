@@ -46,22 +46,28 @@ export default function PokeballTabBar({ state, descriptors, navigation }) {
 
             <View style={styles.centerWrapper}>
                 <View style={styles.outerCircle}>
-                    <Animated.View
-                        style={[
-                            styles.innerCircle,
-                            {
-                                transform: [{ scale }],
-                                backgroundColor: isLoading ? '#FF4848' : '#4CAF50',
-                            }
-                        ]}
-                    />
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.emit({ type: 'tabPress', target: activeRoute.key })
+                        }}
+                    >
+                        <Animated.View
+                            style={[
+                                styles.innerCircle,
+                                {
+                                    transform: [{ scale }],
+                                    backgroundColor: isLoading ? '#FF4848' : '#4CAF50',
+                                }
+                            ]}
+                        />
+                    </TouchableOpacity>
                 </View>
             </View>
 
             <View style={styles.whiteSection}>
                 {state.routes.map((route, index) => {
                     const { options } = descriptors[route.key];
-                    const label = 
+                    const label =
                         options.tabBarLabel ?? options.title ?? route.name;
 
                     const IconLib = options.tabBarIcon?.lib;

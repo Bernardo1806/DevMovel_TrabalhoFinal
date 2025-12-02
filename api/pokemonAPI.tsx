@@ -7,16 +7,16 @@ const cacheExpiration = 1000 * 60 * 60 * 24 // 24 Horas
 export async function getAllPokemons() {
     try {
 
-        // const cached = await AsyncStorage.getItem(cacheKey)
+        const cached = await AsyncStorage.getItem(cacheKey)
 
-        // if (cached) {
-        //     const parsed = JSON.parse(cached)
+        if (cached) {
+            const parsed = JSON.parse(cached)
 
-        //     if (Date.now() - parsed.timestamp < cacheExpiration) {
-        //         console.log("Carregando pokémons do cache...")
-        //         return parsed.data
-        //     }
-        // }
+            if (Date.now() - parsed.timestamp < cacheExpiration) {
+                console.log("Carregando pokémons do cache...")
+                return parsed.data
+            }
+        }
 
         console.log("Carregando pokémons da API...")
 

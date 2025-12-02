@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     typesContainer: {
         flex: 1,
         flexDirection: 'row',
+        padding: 20,
         gap: 5,
     },
     typeBadge: {
