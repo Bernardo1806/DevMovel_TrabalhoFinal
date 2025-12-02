@@ -31,7 +31,10 @@ const FilterMenu = ({
                                     style={{ width: 35, height: 35, resizeMode: 'contain', borderRadius: 100 }}
                                 />
                             ) : (
-                                <Ionicons name='pricetag' size={28} color={'#fff'} />
+                                <Image
+                                    source={{ uri: 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e8ddc4da-23dd-4502-b65b-378c9cfe5efa/di9v0p9-cf84e681-cf05-4bb1-9b45-41ac0684f7fb.png/v1/fill/w_894,h_894/stellar_type_symbol_galar_by_jormxdos_di9v0p9-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTI4MCIsInBhdGgiOiIvZi9lOGRkYzRkYS0yM2RkLTQ1MDItYjY1Yi0zNzhjOWNmZTVlZmEvZGk5djBwOS1jZjg0ZTY4MS1jZjA1LTRiYjEtOWI0NS00MWFjMDY4NGY3ZmIucG5nIiwid2lkdGgiOiI8PTEyODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.7Tuml5Jcvi4TWDuWFnfAdQT7QaXyuVuIsdJmCmPOQsU' }}
+                                    style={{ width: 40, height: 40, resizeMode: 'contain', borderRadius: 100}}
+                                />
                             )}
                         </TouchableOpacity>
 
@@ -48,7 +51,10 @@ const FilterMenu = ({
                                     {selectedGen}°
                                 </Text>
                             ) : (
-                                <Ionicons name='layers' size={28} color='#fff' />
+                                <Image
+                                    source={{ uri: 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e8ddc4da-23dd-4502-b65b-378c9cfe5efa/dgbypda-e0b92d17-432f-4e7e-8b1a-2cd8cb961cd8.png/v1/fit/w_787,h_787/unova_pokedex_gen_v_close_red_edit_by_jormxdos_dgbypda-414w-2x.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9Nzg3IiwicGF0aCI6Ii9mL2U4ZGRjNGRhLTIzZGQtNDUwMi1iNjViLTM3OGM5Y2ZlNWVmYS9kZ2J5cGRhLWUwYjkyZDE3LTQzMmYtNGU3ZS04YjFhLTJjZDhjYjk2MWNkOC5wbmciLCJ3aWR0aCI6Ijw9Nzg3In1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.IQiD89vcA20EntL-tsKrrLlLviIs-mpwsHEZFYjT9xI' }}
+                                    style={{ width: 40, height: 40, resizeMode: 'contain', borderRadius: 100}}
+                                />
                             )}
                         </TouchableOpacity>
 

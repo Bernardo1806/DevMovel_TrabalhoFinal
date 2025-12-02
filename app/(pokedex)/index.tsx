@@ -2,13 +2,14 @@ import { getAllPokemons } from '@/api/pokemonAPI'
 import BottomModal from '@/components/BottomModal'
 import FilterMenu from '@/components/FilterMenu'
 import PokemonCard from '@/components/PokemonCard'
+import PokemonCardSkeleton from '@/components/PokemonCardSkeleton'
 import { GENERATIONS, TYPE_ICONS } from '@/components/pokemonData'
 
 import { Ionicons } from '@expo/vector-icons'
 import { useScrollToTop } from '@react-navigation/native'
 import { useNavigation } from 'expo-router'
 import React, { useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 
 const index = () => {
@@ -83,9 +84,18 @@ const index = () => {
   }))
 
   if (loading) {
+
+    const skeletonData = Array.from({ length: 10 }, (_, i) => i)
+
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size='large' />
+      <View style={{ flex: 1 }}>
+        <FlatList
+          data={skeletonData}
+          keyExtractor={(item) => item.toString()}
+          renderItem={() => <PokemonCardSkeleton />}
+          numColumns={1}
+          contentContainerStyle={styles.list}
+        />
       </View>
     )
   }
@@ -96,7 +106,12 @@ const index = () => {
         ref={ref}
         data={pokemons}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <PokemonCard pokemon={item} />}
+        renderItem={({ item }) => (
+          <PokemonCard
+            pokemon={item}
+            onPress={() => navigation.navigate("pokemon", { id: item.id })}
+          />
+        )}
         numColumns={1}
         contentContainerStyle={styles.list}
       />
@@ -201,10 +216,6 @@ const ApplyButton = ({ onPress }) => (
 export default index
 
 const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-  },
   list: {
     padding: 8,
   },
@@ -235,7 +246,8 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 15,
-    fontFamily: 'Silkscreen', color: '#fff',
+    fontFamily: 'Silkscreen',
+    color: '#fff',
   },
   badgeIcon: {
     width: 40,
@@ -244,6 +256,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   typeText: {
+    fontFamily: 'Silkscreen',
     color: '#fff',
   },
   generationBtn: {
