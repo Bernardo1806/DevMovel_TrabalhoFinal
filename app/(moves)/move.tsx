@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   },
   effectText: {
     fontSize: 24,
-    fontFamily: "Silkscreen",
+    fontFamily: "PixelifySansVariableFont",
     textAlign: "center",
   },
   typeRow: {

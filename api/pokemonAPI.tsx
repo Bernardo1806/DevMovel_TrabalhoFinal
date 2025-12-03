@@ -1,191 +1,85 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import api from "./api"
 
-const cacheAllKey = "pokemonCacheV1"
 const cacheExpiration = 1000 * 60 * 60 * 24 // 24 Horas
 
-export async function getAllPokemons() {
+async function fetchWithCache(cacheKey, fetchFn) {
     try {
-
-        const cached = await AsyncStorage.getItem(cacheAllKey)
-
+        const cached = await AsyncStorage.getItem(cacheKey)
         if (cached) {
             const parsed = JSON.parse(cached)
-
             if (Date.now() - parsed.timestamp < cacheExpiration) {
-                console.log("Carregando pokémons do cache...")
+                console.log(`Carregando ${cacheKey} do cache...`)
                 return parsed.data
             }
         }
 
-        console.log("Carregando pokémons da API...")
-
-        const { data } = await api.get("pokemon?limit=1025")
-
-        const detailedPokemons = await Promise.all(
-            data.results.map(async (pokemon) => {
-                const details = await api.get(pokemon.url)
-
-                return {
-                    id: details.data.id,
-                    name: details.data.name,
-                    types: details.data.types.map(t => t.type.name),
-                    image: details.data.sprites.other["official-artwork"].front_default,
-                }
-            })
-        )
+        console.log(`Carregando ${cacheKey} da API...`)
+        const data = await fetchFn()
 
         await AsyncStorage.setItem(
-            cacheAllKey,
-            JSON.stringify({
-                timestamp: Date.now(),
-                data: detailedPokemons,
-            })
+            cacheKey,
+            JSON.stringify({ timestamp: Date.now(), data })
         )
 
-        return detailedPokemons
+        return data
     } catch (error) {
-        console.error("Erro ao carregar pokémons:", error.message)
+        console.log(`Erro ao carregar ${cacheKey}:`, error.message)
 
-        const fallback = await AsyncStorage.getItem(cacheAllKey)
+        const fallback = await AsyncStorage.getItem(cacheKey)
         if (fallback) {
-            console.log("Usando cache antigo (API falhou)")
+            console.log(`Usando cache antigo (${cacheKey})`)
             return JSON.parse(fallback).data
         }
 
-        return []
+        return null
     }
 }
 
+async function fetchListWithDetails(listUrl, mapperFn) {
+    const { data } = await api.get(listUrl)
 
-export async function getPokemonByID(ID) {
-    const cacheKey = `pokemonCache_${ID}`
-
-    try {
-
-        const cached = await AsyncStorage.getItem(cacheKey)
-
-        if (cached) {
-            const parsed = JSON.parse(cached)
-
-            if (Date.now() - parsed.timestamp < cacheExpiration) {
-                console.log(`Carregando pokémons ${ID} do cache...`)
-                return parsed.data
+    const results = await Promise.all(
+        data.results.map(async (item) => {
+            try {
+                const detail = await api.get(item.url)
+                return mapperFn(detail.data)
+            } catch (error) {
+                console.log(`Inválido ignorado: ${item.name}`)
+                return null
             }
-        }
+        })
+    )
 
-        console.log(`Carregando pokémon ${ID} da API...`)
+    return results.filter(item => item !== null)
+}
 
-        const { data } = await api.get(`pokemon/${ID}/`)
+export function getAllPokemons() {
+    return fetchWithCache("pokemonList", async () => {
+        return await fetchListWithDetails("pokemon?limit=1025", (data) => ({
+            id: data.id,
+            name: data.name,
+            types: data.types.map(t => t.type.name),
+            image: data.sprites.other["official-artwork"].front_default,
+        }))
+    })
+}
 
-        const detailsPokemon = {
+export function getPokemonByID(ID) {
+    return fetchWithCache(`pokemon_${ID}`, async () => {
+        const { data } = await api.get(`pokemon/${ID}`)
+        return {
             id: data.id,
             name: data.name,
             types: data.types.map(t => t.type.name),
             image: data.sprites.other["official-artwork"].front_default,
         }
-
-        await AsyncStorage.setItem(
-            cacheKey,
-            JSON.stringify({
-                timestamp: Date.now(),
-                data: detailsPokemon,
-            })
-        )
-
-        return detailsPokemon
-
-    } catch (error) {
-        console.error(`Erro ao carregar Pokémon ${ID}:`, error.message)
-
-        const fallback = await AsyncStorage.getItem(cacheKey)
-        if (fallback) {
-            console.log("Usando cache antigo (API falhou)")
-            return JSON.parse(fallback).data
-        }
-        return null
-    }
+    })
 }
 
-const cacheAllKeyMove = "moveCacheV1"
-
-export async function getAllMoves() {
-    try {
-
-        const cached = await AsyncStorage.getItem(cacheAllKeyMove)
-
-        if (cached) {
-            const parsed = JSON.parse(cached)
-
-            if (Date.now() - parsed.timestamp < cacheExpiration) {
-                console.log("Carregando moves do cache...")
-                return parsed.data
-            }
-        }
-
-        console.log("Carregando moves da API...")
-
-        const { data } = await api.get("move?limit=919")
-
-        const detailedMove = await Promise.all(
-            data.results.map(async (move) => {
-                const details = await api.get(move.url)
-
-                return {
-                    id: details.data.id,
-                    name: details.data.name,
-                    power: details.data.power ?? '-',
-                    accuracy: details.data.accuracy ?? '-',
-                    type: details.data.type.name,
-                    pp: details.data.pp,
-                    damage_class: details.data.damage_class.name,
-                }
-            })
-        )
-
-        await AsyncStorage.setItem(
-            cacheAllKeyMove,
-            JSON.stringify({
-                timestamp: Date.now(),
-                data: detailedMove,
-            })
-        )
-
-        return detailedMove
-    } catch (error) {
-        console.error("Erro ao carregar moves:", error.message)
-
-        const fallback = await AsyncStorage.getItem(cacheAllKeyMove)
-        if (fallback) {
-            console.log("Usando cache antigo (API falhou)")
-            return JSON.parse(fallback).data
-        }
-
-        return []
-    }
-}
-
-export async function getMoveByID(ID) {
-    const cacheKey = `moveCache_${ID}`
-
-    try {
-
-        const cached = await AsyncStorage.getItem(cacheKey)
-
-        if (cached) {
-            const parsed = JSON.parse(cached)
-
-            if (Date.now() - parsed.timestamp < cacheExpiration) {
-                console.log(`Carregando pokémons ${ID} do cache...`)
-                return parsed.data
-            }
-        }
-
-        console.log(`Carregando pokémon ${ID} da API...`)
-
-        const { data } = await api.get(`move/${ID}/`)
-
-        const detailsMove = {
+export function getAllMoves() {
+    return fetchWithCache("moveList", async () => {
+        return await fetchListWithDetails("move?limit=919", (data) => ({
             id: data.id,
             name: data.name,
             power: data.power ?? '-',
@@ -193,27 +87,79 @@ export async function getMoveByID(ID) {
             type: data.type.name,
             pp: data.pp,
             damage_class: data.damage_class.name,
-            effect: data.effect_entries?.[0]?.effect ?? data.flavor_text_entries?.[0]?.flavor_text ?? 'Sem Descrição',
+        }))
+    })
+}
+
+export function getMoveByID(ID) {
+    return fetchWithCache(`move_${ID}`, async () => {
+        const { data } = await api.get(`move/${ID}`)
+
+        const effectEN =
+            data.effect_entries.find(e => e.language.name === 'en')
+            ?? data.flavor_text_entries?.find(e => e.language.name === 'en')
+
+        return {
+            id: data.id,
+            name: data.name,
+            power: data.power ?? '-',
+            accuracy: data.accuracy ?? '-',
+            type: data.type.name,
+            pp: data.pp,
+            damage_class: data.damage_class.name,
+            effect: effectEN?.effect || effectEN?.flavor_text || "Sem descrição",
         }
+    })
+}
 
-        await AsyncStorage.setItem(
-            cacheKey,
-            JSON.stringify({
-                timestamp: Date.now(),
-                data: detailsMove,
-            })
-        )
+export function getAllAbility() {
+    return fetchWithCache("abilityList", async () => {
+        return await fetchListWithDetails("ability?limit=307", (data) => ({
+            id: data.id,
+            name: data.name,
+            gen: data.generation.name,
+        }))
+    })
+}
 
-        return detailsMove
+export function getAbilityByID(ID) {
+    return fetchWithCache(`ability_${ID}`, async () => {
+        const { data } = await api.get(`ability/${ID}`)
 
-    } catch (error) {
-        console.error(`Erro ao carregar move ${ID}:`, error.message)
+        const effectEN = data.effect_entries?.find(e => e.language.name === "en")
 
-        const fallback = await AsyncStorage.getItem(cacheKey)
-        if (fallback) {
-            console.log("Usando cache antigo (API falhou)")
-            return JSON.parse(fallback).data
+        return {
+            id: data.id,
+            name: data.name,
+            gen: data.generation.name,
+            effect: effectEN?.effect || "Sem descrição",
         }
-        return null
-    }
+    })
+}
+
+export function getAllItem() {
+    return fetchWithCache("itemList", async () => {
+        return await fetchListWithDetails("item?limit=2180", (data) => ({
+            id: data.id,
+            name: data.name,
+            image: data.sprites?.default || 'https://imgur.com/t4EtWZA',
+            category: data.category.name,
+        }))
+    })
+}
+
+export function getItemByID(ID) {
+    return fetchWithCache(`item1_${ID}`, async () => {
+        const { data } = await api.get(`item/${ID}`)
+
+        const effectEN = data.effect_entries?.find(e => e.language.name === "en")
+
+        return {
+            id: data.id,
+            name: data.name,
+            image: data.sprites?.default || 'https://i.imgur.com/t4EtWZA.png',
+            category: data.category.name,
+            effect: effectEN?.effect || "Sem descrição",
+        }
+    })
 }
