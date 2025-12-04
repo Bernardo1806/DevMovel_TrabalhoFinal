@@ -68,8 +68,8 @@ export default function RootLayout() {
       <Drawer.Screen
         name="(moves)"
         options={{
-          drawerLabel: 'Lista de Técnicas',
-          title: 'Lista de Técnicas',
+          drawerLabel: 'Movedex',
+          title: 'Movedex',
           drawerIcon: ({ color, size }) => (
             <Ionicons name="flash-outline" size={size} color={color} />
           ),
@@ -78,8 +78,8 @@ export default function RootLayout() {
       <Drawer.Screen
         name="(ability)"
         options={{
-          drawerLabel: 'Lista de Habilidades',
-          title: 'Lista de Habilidades',
+          drawerLabel: 'Abilitydex',
+          title: 'Abilitydex',
           drawerIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="star-three-points-outline" size={size} color={color} />
           ),
@@ -88,8 +88,8 @@ export default function RootLayout() {
       <Drawer.Screen
         name="(item)"
         options={{
-          drawerLabel: 'Lista de Items',
-          title: 'Lista de Items',
+          drawerLabel: 'Itemdex',
+          title: 'Itemdex',
           drawerIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="bag-personal-outline" size={size} color={color} />
           ),

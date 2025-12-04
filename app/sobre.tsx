@@ -18,7 +18,7 @@ const sobre = () => {
         <Text style={[styles.infoTxT, { marginBottom: 10 }]}>- PokeAPIv2</Text>
 
         <Text style={[styles.infoTxT, { fontSize: 20, marginBottom: 5 }]}>Feito por:</Text>
-        <Text style={styles.infoTxT}>- Bernardo Soares Machado (EU 👇)</Text>
+        <Text style={styles.infoTxT}>- Bernardo Soares Machado</Text>
         
         <Image 
           source={{ uri: 'https://i.imgur.com/hM3lynW.png'}}

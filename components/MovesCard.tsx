@@ -38,8 +38,9 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         backgroundColor: '#4d52a0ff',
         flex: 1,
-        elevation: 3,
-        borderWidth: 0,
+        borderRightWidth: 3,
+        borderBottomWidth: 3,
+        borderColor: '#1a1a1a',
     },
     headerContainer: {
         flexDirection: 'row',

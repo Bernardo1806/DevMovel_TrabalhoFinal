@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "DevMovel_TrabalhoFinal",
+    "name": "Alldex",
     "slug": "DevMovel_TrabalhoFinal",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/image.png",
     "scheme": "devmoveltrabalhofinal",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
